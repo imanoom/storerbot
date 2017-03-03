@@ -31,15 +31,13 @@ if (!is_null($events['events'])) {
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			
 			$result = curl_exec($ch);
-			var_dump($result);
-			$resArr = json_decode($result);
-
+			
 			curl_close($ch);
 			
 			// Build message to reply back
 			$messages = [
 				'type' => 'text',
-				'text' => '3'.print_r($resArr)
+				'text' => '2'.$result
 			];
 			
 			// Make a POST Request to Messaging API to reply to sender
