@@ -16,18 +16,11 @@ if (!is_null($events['events'])) {
 			// Get replyToken
 			$replyToken = $event['replyToken'];
 
-			// Build message to reply back
-			$messages = [
-				'type' => 'text',
-				'text' => $text
-			];
 			// Send data to server
 			$url = 'http://www.alicornteam.com/storerbot/recordData.php';
 			$data = [
-				'userToken' => '275027402349-3',
-				'name' => 'manoom',
-				'address' => '24 ekkksds bankgokd',
-				'phonenumber' => '0867894773',
+				'userId' => $event['source']['userId'],
+				'message' => $text
 			];
 			$post = json_encode($data);
 			$headers = array('Content-Type: application/json',);
@@ -38,6 +31,12 @@ if (!is_null($events['events'])) {
 			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 			$result = curl_exec($ch);
 			curl_close($ch);
+			
+			// Build message to reply back
+			$messages = [
+				'type' => 'text',
+				'text' => $result
+			];
 			
 			// Make a POST Request to Messaging API to reply to sender
 			$url = 'https://api.line.me/v2/bot/message/reply';
