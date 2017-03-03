@@ -32,12 +32,14 @@ if (!is_null($events['events'])) {
 			
 			$result = curl_exec($ch);
 			var_dump($result);
+			$resArr = json_decode($result);
+
 			curl_close($ch);
 			
 			// Build message to reply back
 			$messages = [
 				'type' => 'text',
-				'text' => '2'.$result
+				'text' => '3'.print_r($resArr)
 			];
 			
 			// Make a POST Request to Messaging API to reply to sender
