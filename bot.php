@@ -29,16 +29,16 @@ if (!is_null($events['events'])) {
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 			
 			$result = curl_exec($ch);
+			var_dump($result);
 			
 			curl_close($ch);
 			
 			// Build message to reply back
 			$messages = [
 				'type' => 'text',
-				'text' => '1'.$result
+				'text' => '2'.$result
 			];
 			
 			// Make a POST Request to Messaging API to reply to sender
