@@ -31,8 +31,19 @@ if (!is_null($events['events'])) {
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 			
+			
 			$result = curl_exec($ch);
-			var_dump($result);
+			
+			$curl_errno = curl_errno($ch);
+			$curl_error = curl_error($ch);
+			
+			if ($curl_errno > 0) {
+					$result = "cURL Error ($curl_errno): $curl_error\n";
+			} else {
+					var_dump($result);
+			}
+		
+			
 			
 			curl_close($ch);
 			
