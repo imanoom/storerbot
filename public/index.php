@@ -5,19 +5,33 @@
 	$mysqli = $db->getConnection(); 
 	
 	$datas = json_decode(file_get_contents('php://input'), true);
-
 	$userId = $datas['userId'];
-	$note = $datas['message'];
-	$timeStamp = date('Y-m-d H:i:s');
+	$message = $datas['message'];
 	
-	$sql_query = "INSERT INTO customers (userToken,note,dateTimeStamp) VALUES ('".$userId."', '".$note."', '".$timeStamp."')";
-
-	$result = $mysqli->query($sql_query);
-
-	if($result != 1) {
-		echo "�բ�ͼԴ��Ҵ";
+	if(startsWith($message,"order") || startsWith($message,"Order")) {
+		$message = substr($message,6);
+		echo insertOrder($mysqli,$userId,$message);
 	} else {
-		echo "�ѹ�֡���������� !";
+		echo "ไม่รู้จะทำอะไร ไม่มีอะไรให้ทำ - - !";
 	}
+		
+	function insertOrder($mysqli,$userId,$note) {
+
+		$sql_query = "INSERT INTO customers (userToken,note,dateTimeStamp) VALUES ('".$userId."', '".$note."', '".date('Y-m-d H:i:s')."')";
+
+		$result = $mysqli->query($sql_query);
+
+		if($result != 1) {
+			header('HTTP/ 500 Internal error');
+		} else {
+			return "บันทึกข้อมูลแล้ว !";
+		}
+	
+	}
+	
+	function startsWith($fullString, $someWord) {
+		return $someWord === "" || strrpos($fullString, $someWord, -strlen($fullString)) !== false;
+	}
+	
 			
 ?>
