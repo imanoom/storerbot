@@ -25,26 +25,22 @@ if (!is_null($events['events'])) {
 			$post = json_encode($data);
 			$headers = array('Content-Type: application/json',);
 			
+			$timeout = 10;
 			$ch = curl_init($url);
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-			
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+			curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
 			
 			$result = curl_exec($ch);
-			
-			$curl_errno = curl_errno($ch);
-			$curl_error = curl_error($ch);
-			
-			if ($curl_errno > 0) {
-					$result = "cURL Error ($curl_errno): $curl_error\n";
+			$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			if($httpcode==200){
+				var_dump($result);
 			} else {
-					var_dump($result);
+				$result = "พบข้อผิดพลาด ติดต่อมะหนุ่ม ด่วน !";
 			}
-		
-			
-			
+	  
 			curl_close($ch);
 			
 			// Build message to reply back
