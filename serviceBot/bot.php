@@ -35,7 +35,7 @@ if (!is_null($events['events'])) {
 			
 			$result = curl_exec($ch);
 			$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-			if($httpcode==200){
+			if($httpcode == 200){
 				var_dump($result);
 			} else {
 				$result = "พบข้อผิดพลาด ติดต่อมะหนุ่ม ด่วน !";
