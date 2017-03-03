@@ -17,7 +17,7 @@ if (!is_null($events['events'])) {
 			$replyToken = $event['replyToken'];
 
 			// Send data to server
-			$url = 'http://www.alicornteam.com/storerbot/recordData.php';
+			$url = 'http://www.alicornteam.com/storerbot/public/index.php';
 			$data = [
 				'userId' => $event['source']['userId'],
 				'message' => $text
