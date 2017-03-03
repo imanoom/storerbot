@@ -28,7 +28,8 @@ if (!is_null($events['events'])) {
 			$ch = curl_init($url);
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			
 			$result = curl_exec($ch);
 			var_dump($result);
 			curl_close($ch);
@@ -36,7 +37,7 @@ if (!is_null($events['events'])) {
 			// Build message to reply back
 			$messages = [
 				'type' => 'text',
-				'text' => '1'.$result
+				'text' => '2'.$result
 			];
 			
 			// Make a POST Request to Messaging API to reply to sender
@@ -61,4 +62,29 @@ if (!is_null($events['events'])) {
 		}
 	}
 }
+
 echo "OK";
+
+
+function get_web_page($url) {
+    $options = array(
+        CURLOPT_RETURNTRANSFER => true,   // return web page
+        CURLOPT_HEADER         => false,  // don't return headers
+        CURLOPT_FOLLOWLOCATION => true,   // follow redirects
+        CURLOPT_MAXREDIRS      => 10,     // stop after 10 redirects
+        CURLOPT_ENCODING       => "",     // handle compressed
+        CURLOPT_USERAGENT      => "test", // name of client
+        CURLOPT_AUTOREFERER    => true,   // set referrer on redirect
+        CURLOPT_CONNECTTIMEOUT => 120,    // time-out on connect
+        CURLOPT_TIMEOUT        => 120,    // time-out on response
+    ); 
+
+    $ch = curl_init($url);
+    curl_setopt_array($ch, $options);
+
+    $content  = curl_exec($ch);
+
+    curl_close($ch);
+
+    return $content;
+}
