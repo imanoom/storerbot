@@ -22,8 +22,11 @@
 					
 				$db = Database::getInstance();
 				$mysqli = $db->getConnection(); 
-				$sql_query = "SELECT * FROM customers WHERE cusId in(".$_GET['id'].") ORDER BY cusId DESC";
+				$sql_query = "SELECT * FROM orders WHERE orderId in(".$_GET['id'].") ORDER BY orderId DESC";
 				$resultEl = $mysqli->query($sql_query)->fetch_all(MYSQLI_ASSOC);
+				
+				$sql_query = "UPDATE orders SET printed='1' WHERE orderId in(".$_GET['id'].")";
+				$result = $mysqli->query($sql_query);
 
 			?>
 			<?php foreach ($resultEl as $key=>$cus) { $key++; ?>

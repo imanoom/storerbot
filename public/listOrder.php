@@ -2,6 +2,7 @@
 	
 	require_once '../connection/DB.class.php';
 	$configFile = include('../config/app.conf');
+	
 	session_start();
 
 ?>
@@ -21,6 +22,8 @@
 	
 	<link rel="stylesheet" href="//cdn.datatables.net/v/dt/dt-1.10.12/se-1.2.0/datatables.min.css">
 	<link rel="stylesheet" href="//gyrocode.github.io/jquery-datatables-checkboxes/1.1.0/css/dataTables.checkboxes.css">
+	
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	 
     
 	<!--<link href="<?=$configFile['base_dir'];?>asset/css/dataTables.bootstrap.css" rel="stylesheet">-->
@@ -72,7 +75,8 @@
          <th style="width: 5%" ></th>
          <th style="width: 5%" >No.</th>
          <th style="width: 15%" >วัน/เวลา ที่บันทึก</th>
-         <th style="width: 55%" >ชื่อ - นามสกุล</th>
+         <th style="width: 45%" >ชื่อ - นามสกุล</th>
+		 <th style="width: 10%" >สถานะ</th>
          <th style="width: 10%"  class="text-center">ดูข้อมูล</th>
          <th style="width: 10%"  class="text-center">ลบออก</th>
       </tr>
@@ -82,13 +86,13 @@
 						
 							$db = Database::getInstance();
 							$mysqli = $db->getConnection(); 
-							$sql_query = "SELECT * FROM customers ORDER BY cusId DESC";
+							$sql_query = "SELECT * FROM orders ORDER BY printed ,orderId DESC";
 							$resultEl = $mysqli->query($sql_query)->fetch_all(MYSQLI_ASSOC);
 			
 						?>
 						<?php foreach ($resultEl as $key=>$cus) { $key++; ?>
 							<tr class="odd gradeX">
-								<td ><?=$cus['cusId'];?></td>
+								<td ><?=$cus['orderId'];?></td>
 								<td><?=$key;?></td>
 								<td><?=$cus['dateTimeStamp'];?></td>
 								<?php
@@ -98,8 +102,9 @@
 								
 								?>
 								<td><?=$full_texts[0];?>  <?=$full_texts[1];?></td>
-								<td class="text-center" ><a href="view.php?idCard="><i class="fa fa-search"></i></a></td>
-								<td class="text-center" ><a href="view.php?idCard="><i class="fa fa-trash-o" aria-hidden="true"></i></a></td>
+								<td><?php if($cus['printed'] == "1") { echo "Print แล้ว"; } else { echo "ยังไม่ Print"; } ?></td>
+								<td class="text-center" ><a href="view.php?orderId=<?=$cus['orderId'];?>"><i class="fa fa-search"></i></a></td>
+								<td class="text-center" ><a href="action/deleteOrder.php?orderId=<?=$cus['orderId'];?>"><i class="fa fa-trash-o" aria-hidden="true"></i></a></td>
 							</tr>
 						<?php } ?>
 						</tbody>
@@ -127,10 +132,11 @@
 	 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	 <script src="//cdn.datatables.net/v/dt/dt-1.10.12/se-1.2.0/datatables.min.js"></script>
 	 <script src="//gyrocode.github.io/jquery-datatables-checkboxes/1.1.0/js/dataTables.checkboxes.min.js"></script>
-
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<script>
 $(document).ready(function() {
    var table = $('#example').DataTable({
+	  "pageLength": 100,
       'columnDefs': [
          {
             'targets': 0,

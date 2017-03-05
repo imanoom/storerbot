@@ -24,11 +24,10 @@ class Database {
 	// Constructor
 	private function __construct() {
 	
-		$configFile = include('../config/app.conf');
-		$this->_host = $configFile['db_servername'];
-		$this->_username = $configFile['db_username'];
-		$this->_password = $configFile['db_password'];
-		$this->_database = $configFile['db_database'];
+		$this->_host = '127.0.0.1';
+		$this->_username = 'root';
+		$this->_password = '';
+		$this->_database = 'storer';
 	
 		$this->_connection = new mysqli($this->_host, $this->_username, 
 			$this->_password, $this->_database);
