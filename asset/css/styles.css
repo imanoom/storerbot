@@ -22,9 +22,9 @@ img,object,embed {
 body {
     max-width: 1050px;
     margin: 0 auto;
-    font-family: Baskerville, "Baskerville Old Face", "Hoefler Text", Garamond, "Times New Roman", serif;
-    font-size: 100%;
-    line-height: 1.4em;
+    line-height: 1.8em;
+	letter-spacing: 0.5px;
+	font-size: 1em;
     color: #000;
 }
 

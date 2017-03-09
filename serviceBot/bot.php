@@ -15,7 +15,7 @@ if (!is_null($events['events'])) {
 		
 			$replyToken = $event['replyToken'];
 
-			$url = 'http://www.alicornteam.com/storerbot/routes.php';
+			$url = 'https://www.alicornteam.com/storerbot/routes.php';
 			$data = [
 				'userId' => $event['source']['userId'],
 				'message' => $text

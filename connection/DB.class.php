@@ -1,34 +1,47 @@
 <?php
 
-
 /*
 * Mysql database class - only one connection alowed
 */
+
 class Database {
+	
 	private $_connection;
+	private static $_configFile;
 	private static $_instance; //The single instance
-	private $_host = "";
-	private $_username = "";
-	private $_password = "";
-	private $_database = "";
+	private $_host;
+	private $_username;
+	private $_password;
+	private $_database;
 	/*
 	Get an instance of the Database
 	@return Instance
 	*/
-	public static function getInstance() {
-		if(!self::$_instance) { // If no instance then make one
+	private function initialize($configFile) {
+		
+		$this->_host = $configFile['db_servername'];
+		$this->_username = $configFile['db_username'];
+		$this->_password = $configFile['db_password'];
+		$this->_database = $configFile['db_database'];
+	
+	}
+
+	public static function getInstance($configFile) {
+
+		self::$_configFile = $configFile;
+		
+		if(!self::$_instance) {
 			self::$_instance = new self();
 		}
+
 		return self::$_instance;
 	}
+	
 	// Constructor
 	private function __construct() {
-	
-		$this->_host = '127.0.0.1';
-		$this->_username = 'root';
-		$this->_password = '';
-		$this->_database = 'storer';
-	
+
+		$this->initialize(self::$_configFile);
+		
 		$this->_connection = new mysqli($this->_host, $this->_username, 
 			$this->_password, $this->_database);
 		mysqli_set_charset($this->_connection, "utf8");

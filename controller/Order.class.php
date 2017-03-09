@@ -36,7 +36,7 @@ class Order {
 			$sql_query = "INSERT INTO orders (userToken,note,dateTimeStamp) VALUES ('".$this->lineUserId."', '".base64_encode($realMessage)."', '".date('Y-m-d H:i:s')."')";
 
 			$result = $this->connect->query($sql_query);
-
+			
 			if($result != 1) {
 				return "ขออภัย ระบบขัดข้อง โปรดทำรายการใหม่ในภายหลัง [ติดต่อผู้ดูแลระบบ]";
 			} else {
@@ -55,7 +55,7 @@ class Order {
 			$sqlExtra = "AND userToken = '".$users->lineUserId."'";
 		}
 		
-		$sql_query = "SELECT * FROM orders WHERE dateTimeStamp between '".date("Y-m-d",strtotime("-1 days"))."' and '".date("Y-m-d")." 23:59:59' AND printed = '0' ".$sqlExtra;
+		$sql_query = "SELECT * FROM orders WHERE dateTimeStamp between '".date("Y-m-d",strtotime("-1 days"))."' and '".date("Y-m-d")." 23:59:59' ".$sqlExtra;
 
 		$result = $this->connect->query($sql_query)->fetch_all(MYSQLI_ASSOC);
 
@@ -83,7 +83,7 @@ class Order {
 		}
 		
 		if($output == "") {
-			return "ยังไม่มีรายการสั่งซื้อ";
+			return "ยังไม่มีรายการสั่งซื้อ".$sql_query;
 		} else {
 			return $output;
 		}
@@ -136,46 +136,22 @@ class Order {
 	}
 	
 	function view_order($users,$message) {
-		
-		$sqlExtra = "";
-		
-		if($users->userLevel != "Admin") {
-			$sqlExtra = "AND userToken = '".$users->lineUserId."'";
-		}
-		
-		$sql_query = "SELECT * FROM orders WHERE dateTimeStamp between '".date("Y-m-d",strtotime("-1 days"))."' and '".date("Y-m-d")." 23:59:59' AND printed = '0' ".$sqlExtra;
 
-		$result = $this->connect->query($sql_query)->fetch_all(MYSQLI_ASSOC);
+		$sql_query = "SELECT * FROM orders WHERE userToken = '".$users->lineUserId."' ORDER BY dateTimeStamp DESC LIMIT 1;";
 
-		$orderArr = array();
-		foreach ($result as $key=>$cus) { 
+		$result = $this->connect->query($sql_query);
+		$row_cnt = mysqli_num_rows($result);
+		$result = $result->fetch_object();
 		
-			$key++;
-			
-			if($cus['userToken'] == $users->lineUserId || $users->userLevel == "Admin") {
-				array_push($orderArr,$cus['orderId']);
-			}
+		$text = "ไม่พบรายการล่าสุด";
+		if($row_cnt == 1) {
+	
+			$text = base64_decode($result->note)."\r\n\r\nบันทึก: ".$result->dateTimeStamp;
 			
 		}
 		
-		$no = substr($message,4);
-		
-		if($no == "" || $no == " ") {
-			return "โปรดระบุ ลำดับที่ต้องการดูข้อมูล โดยเลือกจากรายการ";
-		}
-		
-		$noArr = (int)$no-1;
-		
-		if($no > $key) {
-			return "คุณระบุลำดับไม่ถูกต้อง [".$key."]";
-		}
-		
-		$sql_query = "SELECT * FROM orders WHERE orderId = '".$orderArr[$noArr]."'";
-		$result = $this->connect->query($sql_query)->fetch_object();
+		return $text;
 
-		return base64_decode($result->note);
-
-		
 	}
 	
 	function startsWith($fullString, $someWord) {

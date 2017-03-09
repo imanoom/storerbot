@@ -1,11 +1,4 @@
-<?php
-	
-	require_once '../connection/DB.class.php';
-	$configFile = include('../config/app.conf');
-	
-	session_start();
-
-?>
+<?php require_once '../Kernel.php';?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -14,17 +7,12 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Storer</title>
+    <title>Storer : ข้อมูลการสั้งซื้อ</title>
 
 	<link href="<?=$configFile['base_dir'];?>asset/css/bootstrap.css" rel="stylesheet">
 	<link href="<?=$configFile['base_dir'];?>asset/css/sb-admin.css" rel="stylesheet">
 	<link rel="stylesheet" href="<?=$configFile['base_dir'];?>asset/font-awesome/css/font-awesome.min.css">
-	
-	<link rel="stylesheet" href="//cdn.datatables.net/v/dt/dt-1.10.12/se-1.2.0/datatables.min.css">
-	<link rel="stylesheet" href="//gyrocode.github.io/jquery-datatables-checkboxes/1.1.0/css/dataTables.checkboxes.css">
 	 
-    
-	<!--<link href="<?=$configFile['base_dir'];?>asset/css/dataTables.bootstrap.css" rel="stylesheet">-->
 	
 	<style>
 	
@@ -59,14 +47,14 @@
 	   <div id="page-wrapper">
 	  <div class="row">
           <div class="col-lg-12">
-            <h1>ดูข้อมูล</h1>
+            <h1>ข้อมูลการสั้งซื้อ</h1>
           </div>
         </div><!-- /.row -->
 		<hr/>
 		<div class="row">
           <div class="col-sm-6">
 			<?php 
-				$db = Database::getInstance();
+				$db = Database::getInstance($configFile);
 				$mysqli = $db->getConnection(); 
 				$sql_query = "SELECT * FROM orders JOIN users on orders.userToken = users.lineUserId WHERE orderId = '".$_GET['orderId']."'";
 				$result = $mysqli->query($sql_query)->fetch_object();
@@ -76,7 +64,7 @@
 			  <div class="form-group">
 				<label for="name" class="col-sm-3 control-label">ผู้สั่ง</label>
 				<div class="col-sm-9">
-				  <input type="text" class="form-control" id="name" name="name" value="<?=$result->firstname;?> <?=$result->lastname;?>" readonly>
+				  <input type="text" class="form-control" id="name" name="name" value="<?=base64_decode($result->firstname);?> <?=base64_decode($result->lastname);?>" readonly>
 				</div>
 			  </div>
 			  <div class="form-group">
@@ -86,7 +74,7 @@
 				</div>
 			  </div>
 			  <div class="form-group">
-				<label for="datetime" class="col-sm-3 control-label">วัน - เวลา ที่สั่ง</label>
+				<label for="datetime" class="col-sm-3 control-label">วัน - เวลา บันทึก</label>
 				<div class="col-sm-9">
 				  <input type="text" class="form-control" id="datetime" name="datetime" value="<?=$result->dateTimeStamp;?>" readonly >
 				</div>
@@ -94,7 +82,7 @@
 			  <div class="form-group">
 				<div class="col-sm-offset-3 col-sm-9">
 				  <button type="submit" class="btn btn-success">บันทึก</button>
-				  <a href="listOrder.php"  class="btn btn-default">ยกเลิก</a>
+				  <a href="order.php"  class="btn btn-default">ยกเลิก</a>
 				 </form>
 				</div>
 			  </div>
@@ -109,11 +97,6 @@
     <!-- JavaScript -->
     <script src="<?=$configFile['base_dir'];?>asset/js/jquery-1.10.2.js"></script>
     <script src="<?=$configFile['base_dir'];?>asset/js/bootstrap.js"></script>
-
-	 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-	 <script src="//cdn.datatables.net/v/dt/dt-1.10.12/se-1.2.0/datatables.min.js"></script>
-	 <script src="//gyrocode.github.io/jquery-datatables-checkboxes/1.1.0/js/dataTables.checkboxes.min.js"></script>
-
   </body>
   
 </html>

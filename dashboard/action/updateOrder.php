@@ -1,11 +1,8 @@
 <?php
 
-	require_once '../../connection/DB.class.php';
-	$configFile = include('../../config/app.conf');
+	require_once '../../Kernel.php';
 	
-	session_start();
-	
-	$db = Database::getInstance();
+	$db = Database::getInstance($configFile);
 	$mysqli = $db->getConnection(); 
 				
 	$sql_query = "UPDATE orders SET note='".base64_encode($_POST['note'])."' WHERE orderId='".$_POST['orderId']."'";
